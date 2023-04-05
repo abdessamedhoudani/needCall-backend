@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Delete, Injectable, Param } from '@nestjs/common';
+import { CreateUserDto } from './dtos/createUser.dto';
+import { UpdateUserDto } from './dtos/updateUser.dto';
 import { UserEntity } from './user.entity';
 
 
 
 @Injectable()
 export class UsersService {
-  private readonly users: UserEntity[];
+  private users: UserEntity[];
 
   constructor() {
     this.users = [
@@ -27,10 +29,34 @@ export class UsersService {
     ];
   }
 
-  async findOne(username: string): Promise<UserEntity | undefined> {
-    return this.users.find(user => user.username === username);
+  async create(createUserDto: CreateUserDto) {
+    let user = new UserEntity();
+    user = {
+      ...createUserDto
+    };
+    this.users.push(user);
+    return user;
   }
+
+  async findOne(id: string): Promise<UserEntity | undefined> {
+    return this.users.find(user => user.id === id);
+  }
+
   async findAll(): Promise<UserEntity[]> {
     return this.users;
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const userIndex = this.users.findIndex(user => user.id === id);
+
+    this.users[userIndex] = { ...this.users[userIndex], ...updateUserDto };
+
+    return this.users[userIndex];
+  }
+
+
+  async delete(id: string) {
+    const userIndex = this.users.findIndex(user => user.id === id);
+    this.users.splice(userIndex, userIndex + 1);
   }
 }
