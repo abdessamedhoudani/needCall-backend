@@ -1,7 +1,8 @@
-import { Delete, Injectable, Param } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { UpdateUserDto } from './dtos/updateUser.dto';
 import { UserEntity } from './user.entity';
+import { v4 as uuid } from 'uuid';
 
 
 
@@ -32,13 +33,14 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     let user = new UserEntity();
     user = {
+      id: uuid(),
       ...createUserDto
     };
     this.users.push(user);
     return user;
   }
 
-  async findOne(id: string): Promise<UserEntity | undefined> {
+  async findOne(id: string) {
     return this.users.find(user => user.id === id);
   }
 
