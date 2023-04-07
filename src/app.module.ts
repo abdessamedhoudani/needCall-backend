@@ -5,12 +5,12 @@ import { AppService } from './app.service';
 import { getEnvPath } from './common/helper/env.helper';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-
+import { DatabaseModule } from './database/database.module';
 
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
-  imports: [ConfigModule.forRoot({ envFilePath, isGlobal: true }),AuthModule, UsersModule],
+  imports: [ConfigModule.forRoot({ envFilePath, isGlobal: true }),AuthModule, UsersModule,DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })
