@@ -7,11 +7,16 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 
+
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
-  imports: [ConfigModule.forRoot({ envFilePath, isGlobal: true }),AuthModule, UsersModule],
+  imports: [
+    ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+    AuthModule,
+    UsersModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
