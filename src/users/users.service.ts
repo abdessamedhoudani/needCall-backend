@@ -1,45 +1,32 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './interfaces/user.interface';
-import * as bcrypt from 'bcrypt';
+import { Injectable } from '@nestjs/common';
+
+export type User = any;
 
 @Injectable()
 export class UsersService {
+  private readonly users: User[];
 
-  constructor(@Inject('USER_MODEL') private readonly userModel: Model<User>) {
-  }
-
-  async findOne(id: string): Promise<User> {
-    return this.userModel.findOne({ _id: id }).exec();
-  }
-
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
-  }
-
-  async create(createUserDto: CreateUserDto): Promise<User> {
-
-    const hashedpassword = await bcrypt.hash(createUserDto.password, 10);
-    const createdUser = await this.userModel.create(
+  constructor() {
+    this.users = [
       {
-        ...createUserDto, password:hashedpassword
-      });
-    return createdUser;
+        userId: 1,
+        username: 'john',
+        password: 'changeme',
+      },
+      {
+        userId: 2,
+        username: 'chris',
+        password: 'secret',
+      },
+      {
+        userId: 3,
+        username: 'maria',
+        password: 'guess',
+      },
+    ];
   }
 
-  async delete(id: string) {
-    const deletedUser = await this.userModel
-      .findByIdAndRemove({ _id: id })
-      .exec();
-    return deletedUser;
+  async findOne(username: string): Promise<User | undefined> {
+    return this.users.find(user => user.username === username);
   }
-
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const updatedUser = await this.userModel.findOneAndUpdate({ _id: id }, updateUserDto)
-      .exec();
-    return updatedUser;
-  }
-
 }
