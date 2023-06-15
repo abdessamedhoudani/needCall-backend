@@ -11,7 +11,11 @@ export class UsersService {
   constructor(@Inject('USER_MODEL') private readonly userModel: Model<User>) {
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(email: string): Promise<User | undefined> {
+    return this.userModel.findOne({ email: email }).exec();
+  }
+
+  async findOneById(id: string): Promise<User> {
     return this.userModel.findOne({ _id: id }).exec();
   }
 
